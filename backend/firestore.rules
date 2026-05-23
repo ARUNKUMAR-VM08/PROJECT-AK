@@ -1,0 +1,57 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Users Collection
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId) || isAdmin();
+    }
+
+    // Products Collection
+    match /products/{productId} {
+      allow read: if true; // Anyone can view products
+      allow write: if isAdmin(); // Only admins can create/update/delete products
+      
+      // Reviews subcollection
+      match /reviews/{reviewId} {
+        allow read: if true;
+        allow create, update: if isAuthenticated();
+        allow delete: if isAdmin() || (isAuthenticated() && request.auth.uid == resource.data.userId);
+      }
+    }
+
+    // Categories Collection
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Orders Collection
+    match /orders/{orderId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if true; // Allow guest checkout order creations
+      allow update, delete: if isAdmin();
+    }
+
+    // Mail Collection (Trigger Email extension)
+    match /mail/{mailId} {
+      allow create: if true; // Allow creation of email requests during checkout
+      allow read, update, delete: if false; // Security: Deny read or update/delete access to client SDK
+    }
+  }
+}
