@@ -111,7 +111,7 @@ const AdminDashboard = () => {
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-2xl md:text-3xl font-black text-pastel-navy">Boutique Administration</h1>
+          <h1 className="text-2xl md:text-3xl font-black text-pastel-navy">IFRAME YOUU Admin Panel</h1>
           <p className="text-xs text-gray-500">Manage products inventory and track order packaging pipelines</p>
         </div>
 

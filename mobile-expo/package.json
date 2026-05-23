@@ -1,0 +1,24 @@
+{
+  "name": "mobile-expo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "expo": "~56.0.4",
+    "expo-camera": "~56.0.7",
+    "expo-status-bar": "~56.0.4",
+    "react": "19.2.3",
+    "react-native": "0.85.3"
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0"
+  },
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "lint": "eslint . --ext .js,.jsx,.tsx",
+    "test": "echo \"No tests yet\""
+  },
+  "private": true
+}
